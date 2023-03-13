@@ -27,12 +27,6 @@ public interface ListaDao {
     @Query("select * from Lista")
     List<Lista>getitemsLecturas();
 
-//    @Query("UPDATE Lista set selecionada = 'true' where id =:id")
-//    void setTrue(String id);
-//
-//    @Query("UPDATE items SET selecionada = 'false' WHERE id = :id")
-//    void setFalse(String id);
-
 
 
 }

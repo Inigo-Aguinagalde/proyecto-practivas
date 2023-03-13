@@ -2,40 +2,28 @@ package com.example.proyect;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import androidx.lifecycle.ViewModelProvider;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyect.db.AppDataBase;
 import com.example.proyect.db.Lista;
-import com.example.proyect.ui.main.ListaViewModel;
+import com.example.proyect.ui.main.ListaAdapter;
 import com.example.proyect.ui.main.Lista_fragment;
 import com.example.proyect.ui.main.MainFragment;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private Button btn;
@@ -60,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public Fragment  llamadaApi() {
+    public void llamadaApi() {
 
         //Creo el request que se necesita para hacer la llamada a la API
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -141,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
         // Add the request to the RequestQueue.
         // System.out.println("Se intentar añadir a la lista");
         queue.add(stringRequest);
-        ListaViewModel listaAdapter = new ListaViewModel();
-        Fragment fragment = new Lista_fragment(this,listaAdapter);
+        ListaAdapter listaAdapter = new ListaAdapter();
+        Fragment fragment = new Lista_fragment(this);
 
     }
 
