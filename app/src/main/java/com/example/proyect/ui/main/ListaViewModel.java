@@ -14,13 +14,13 @@ import java.util.List;
 public class ListaViewModel extends AndroidViewModel {
 
     private LiveData<List<Lista>> mListas;
-    private AppDataBase mDatabase;
+    private AppDataBase db;
 
     public ListaViewModel(@NonNull Application application) {
         super(application);
-        mDatabase = AppDataBase.getInstance(application.getApplicationContext());
-        mListas = mDatabase.listaDao().getAllListas();
+
     }
+
 
     public LiveData<List<Lista>> getAllListas() {
         return mListas;

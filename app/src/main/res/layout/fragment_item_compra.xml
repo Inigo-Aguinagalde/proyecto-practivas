@@ -9,6 +9,7 @@
     android:paddingBottom="10dp">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/card_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -24,7 +25,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="seccion"
+                android:textAllCaps="false"
+                android:textColor="#333"
                 android:textSize="24sp" />
+
 
             <TextView
                 android:id="@+id/nombre"
@@ -34,7 +38,8 @@
                 android:paddingLeft="5dp"
                 android:paddingTop="15dp"
                 android:text="nombre"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textColor="#333" />
 
             <TextView
                 android:id="@+id/cantidad"
@@ -42,7 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="cantidad"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textColor="#333" />
 
         </LinearLayout>
 

@@ -1,9 +1,13 @@
 package com.example.proyect;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -19,9 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyect.db.AppDataBase;
 import com.example.proyect.db.Lista;
-import com.example.proyect.ui.main.ListaAdapter;
 import com.example.proyect.ui.main.Lista_fragment;
-import com.example.proyect.ui.main.MainFragment;
 
 import java.util.ArrayList;
 
@@ -34,11 +36,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, MainFragment.newInstance())
-                    .commitNow();
-        }
+
 
         db = Room.databaseBuilder(getApplicationContext(), AppDataBase.class, "compra.db").fallbackToDestructiveMigration()
                 .build();
@@ -69,11 +67,12 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray valuesArray = null;
                     try {
                         valuesArray = response.getJSONArray("values");
+                        db.clearAllTables();
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
 
-                    for (int i = 1; i < valuesArray.length(); i++) {
+                    for (int i = 0; i < valuesArray.length(); i++) {
                         JSONArray rowArray = null;
                         try {
                             rowArray = valuesArray.getJSONArray(i);
@@ -88,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
                         String cantidad = null;
                         try {
                             id = rowArray.getString(0);
-                            seccion = rowArray.getString(1);
-                            nombre = rowArray.getString(2);
+                            seccion = rowArray.getString(1).trim();
+                            nombre = rowArray.getString(2).trim();
                             cantidad = rowArray.getString(3);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
@@ -103,9 +102,7 @@ public class MainActivity extends AppCompatActivity {
                         item.setSeccion(seccion);
                         item.setNombre(nombre);
                         item.setCantidad(cant);
-                        System.out.println(seccion);
-                        System.out.println(nombre);
-                        System.out.println(cantidad);
+
 
                         listaCompra.add(item);
                         db.ListaDao().insertAll(item);
@@ -125,12 +122,12 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-
-        // Add the request to the RequestQueue.
-        // System.out.println("Se intentar añadir a la lista");
         queue.add(stringRequest);
-        ListaAdapter listaAdapter = new ListaAdapter();
-        Fragment fragment = new Lista_fragment(this);
+        Lista_fragment listaFragment = new Lista_fragment(this,db);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, listaFragment);
+        fragmentTransaction.commit();
 
     }
 

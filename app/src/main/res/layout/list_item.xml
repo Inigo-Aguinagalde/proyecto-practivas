@@ -9,10 +9,12 @@
     android:paddingBottom="10dp">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp">
         <LinearLayout
+            android:id="@+id/prueba_color"
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:paddingLeft="20dp"

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.example.proyect.MainActivity;
 import com.example.proyect.R;
+import com.example.proyect.db.AppDataBase;
 import com.example.proyect.db.Lista;
 import com.example.proyect.db.ViewModelSentenciasDao;
 
@@ -24,15 +26,18 @@ public class Lista_fragment extends Fragment {
     private ListaAdapter mViewModel;
     private ListaAdapter mAdapter;
     private MainActivity main;
-    public Lista_fragment(MainActivity main) {
+
+    private AppDataBase db;
+    public Lista_fragment(MainActivity main, AppDataBase db) {
         this.main=main;
+        this.db=db;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAdapter = new ListaAdapter();
+        mAdapter = new ListaAdapter(db);
     }
 
     @Override
@@ -43,10 +48,12 @@ public class Lista_fragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mAdapter);
         ViewModelSentenciasDao sentenciasVM = new ViewModelProvider(this).get(ViewModelSentenciasDao.class);
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        Observer<List<Lista>> observerLecrturas = lista -> {
 
-        Observer<List<Lista>> observerLecrturas = lecturas -> {
-
-            mAdapter.setListas(lecturas);
+            mAdapter.setListas(lista);
         };
 
         sentenciasVM.getAllitems().observe(main,observerLecrturas);
