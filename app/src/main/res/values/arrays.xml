@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="unit_entries">
+    <item>KG</item>
+    <item>G</item>
+    <item>UNIDAD</item>
+    <item>BOLSA</item>
+    <item>FILETES</item>
+    <item>L</item>
+    <item>ML</item>
+    </string-array>
+
+    <string-array name="location_entries">
+        <item>Carniceria</item>
+        <item>Pescaderia</item>
+        <item>Fruteria</item>
+        <item>Limpieza</item>
+        <item>Bebidas</item>
+        <item>Farmacia</item>
+    </string-array>
+</resources>

@@ -3,6 +3,7 @@ package com.example.proyect.ui.main;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.proyect.MainActivity;
 import com.example.proyect.R;
@@ -27,6 +29,7 @@ public class Lista_fragment extends Fragment {
     private ListaAdapter mAdapter;
     private MainActivity main;
 
+
     private AppDataBase db;
     public Lista_fragment(MainActivity main, AppDataBase db) {
         this.main=main;
@@ -39,6 +42,7 @@ public class Lista_fragment extends Fragment {
 
         mAdapter = new ListaAdapter(db);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +61,12 @@ public class Lista_fragment extends Fragment {
         };
 
         sentenciasVM.getAllitems().observe(main,observerLecrturas);
+        Button button = view.findViewById(R.id.Añadir);
+        button.setOnClickListener(v -> {
+            AnadirFragment newFragment = new AnadirFragment(db);
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, newFragment).commit();
+
+        });
         return view;
     }
 

@@ -7,11 +7,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import org.json.JSONArray;
@@ -23,7 +28,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyect.db.AppDataBase;
 import com.example.proyect.db.Lista;
+import com.example.proyect.ui.main.AnadirFragment;
 import com.example.proyect.ui.main.Lista_fragment;
+import com.example.proyect.ui.main.LlamadaAPIEscribir;
 
 import java.util.ArrayList;
 
@@ -31,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
     private Button btn;
     public static AppDataBase db;
     private ArrayList<Lista> listaCompra =new ArrayList<>();
-
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        context = getApplicationContext();
         db = Room.databaseBuilder(getApplicationContext(), AppDataBase.class, "compra.db").fallbackToDestructiveMigration()
                 .build();
 
@@ -45,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         llamadaApi();
 
     }
+
 
     public void llamadaApi() {
 
@@ -123,12 +131,37 @@ public class MainActivity extends AppCompatActivity {
         });
 
         queue.add(stringRequest);
-        Lista_fragment listaFragment = new Lista_fragment(this,db);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, listaFragment);
-        fragmentTransaction.commit();
+        Lista_fragment listaFragment = new Lista_fragment(this, db);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, listaFragment).commit();
+
 
     }
+    private boolean mBackPressedOnce = false;
 
+    @Override
+    public void onBackPressed() {
+        if (!mBackPressedOnce) {
+            Lista_fragment listaFragment = new Lista_fragment(this,db);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, listaFragment).commit();
+            Toast.makeText(this, "Press back again to minimize the app", Toast.LENGTH_SHORT).show();
+            mBackPressedOnce = true;
+            LlamadaAPIEscribir write = new LlamadaAPIEscribir(db,context);
+            write.escribir();
+        } else {
+            // Call the default behavior to minimize the app
+            mBackPressedOnce = false;
+            new AlertDialog.Builder(this)
+                    .setTitle("Exit app")
+                    .setMessage("Are you sure you want to exit the app?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Close the app
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        }
+    }
 }

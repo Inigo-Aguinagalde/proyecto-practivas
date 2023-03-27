@@ -25,7 +25,7 @@ public interface ListaDao {
     void delete(Lista message);
 
     @Query("select * from Lista")
-    List<Lista>getitemsLecturas();
+    List<Lista>getitemsLista();
 
 
 

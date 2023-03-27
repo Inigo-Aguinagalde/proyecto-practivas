@@ -28,6 +28,11 @@ public class Lista {
     @ColumnInfo(name = "cantidad")
     public int cantidad;
 
+    @ColumnInfo(name = "notas")
+    public String notas;
+
+    @ColumnInfo(name = "unidad")
+    public String unidad;
     @NonNull
     public String getId() {
         return id;
@@ -53,11 +58,27 @@ public class Lista {
         this.seccion = seccion;
     }
 
+    public String getNotas() {
+        return notas;
+    }
+
+    public void setNotas(String notas) {
+        this.notas = notas;
+    }
+
     public int getCantidad() {
         return cantidad;
     }
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public String getUnidad() {
+        return unidad;
+    }
+
+    public void setUnidad(String unidad) {
+        this.unidad = unidad;
     }
 }
