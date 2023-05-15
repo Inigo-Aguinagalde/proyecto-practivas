@@ -21,9 +21,11 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyect.db.AppDataBase;
@@ -32,7 +34,9 @@ import com.example.proyect.ui.main.AnadirFragment;
 import com.example.proyect.ui.main.Lista_fragment;
 import com.example.proyect.ui.main.LlamadaAPIEscribir;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Button btn;
@@ -47,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         db = Room.databaseBuilder(getApplicationContext(), AppDataBase.class, "compra.db").fallbackToDestructiveMigration()
                 .build();
-
+     
 
         llamadaApi();
 
@@ -56,14 +60,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void llamadaApi() {
 
-        //Creo el request que se necesita para hacer la llamada a la API
+
         RequestQueue queue = Volley.newRequestQueue(this);
-        //Creo un una variable del tipo String con la url necesaria para la llamada a la api
-        String api_key = "AIzaSyCWdraDGr7Rh54gPpZ0mr-WwhrR71Yoqrc";
-        String url ="https://sheets.googleapis.com/v4/spreadsheets/1DEKerqhUopnL3o7nYLNtuc_L414XZQ6y2dH3ap8X5NY/values/A1:Z?key="+api_key;
 
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+        String url ="https://lista.inigoaginagalde.repl.co/read_data";
+
+
+        JsonArrayRequest stringRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
 
             HandlerThread ht = new HandlerThread("ht");
             ht.start();
@@ -71,49 +75,59 @@ public class MainActivity extends AppCompatActivity {
 
 
             handler.post(() -> {
-                if (response != null) {
-                    JSONArray valuesArray = null;
-                    try {
-                        valuesArray = response.getJSONArray("values");
-                        db.clearAllTables();
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
+        
+                if (response!= null) {
+                    db.clearAllTables();
+                    if(response.length()!=0) {
+                        JSONArray responseArray = response;
 
-                    for (int i = 0; i < valuesArray.length(); i++) {
-                        JSONArray rowArray = null;
-                        try {
-                            rowArray = valuesArray.getJSONArray(i);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
+                        for (int i = 0; i < responseArray.length(); i++) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject  = responseArray.getJSONObject(i);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+
+
+                            String seccion = null;
+                            String producto = null;
+                            float cantidad;
+                            String unidad = null;
+                            String nota = null;
+
+
+                            try {
+
+                                seccion = jsonObject.getString("seccion");
+                                producto = jsonObject.getString("nombre");
+                                cantidad = jsonObject.getInt("cantidad");
+                                unidad = jsonObject.getString("unidad");
+                                nota = jsonObject.getString("notas");
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+
+
+
+                            DecimalFormat df = new DecimalFormat("#.##");
+                            String formattedValue = df.format(cantidad);
+                            float result = Float.parseFloat(formattedValue);
+
+                            // Do something with the values (e.g. create a new object and add it to a list)
+                            Lista item = new Lista();
+
+                            item.setSeccion(seccion.toLowerCase());
+                            item.setNombre(producto.toLowerCase());
+                            item.setNotas(nota);
+                            item.setCantidad(result);
+                            item.setUnidad(unidad);
+
+
+
+                            listaCompra.add(item);
+                            db.ListaDao().insertAll(item);
                         }
-
-                        // Get the values from each column in the row
-                        String id = null;
-                        String seccion = null;
-                        String nombre = null;
-                        String cantidad = null;
-                        try {
-                            id = rowArray.getString(0);
-                            seccion = rowArray.getString(1).trim();
-                            nombre = rowArray.getString(2).trim();
-                            cantidad = rowArray.getString(3);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-
-
-                        // Do something with the values (e.g. create a new object and add it to a list)
-                        Lista item = new Lista();
-                        int cant = Integer.parseInt(cantidad);
-                        item.setId(id);
-                        item.setSeccion(seccion);
-                        item.setNombre(nombre);
-                        item.setCantidad(cant);
-
-
-                        listaCompra.add(item);
-                        db.ListaDao().insertAll(item);
                     }
                 }
             });
@@ -122,11 +136,9 @@ public class MainActivity extends AppCompatActivity {
 
         }, error -> {
             // TODO: Handle error
-            System.out.println("estoy en el error");
+
             System.out.println(error.networkResponse);
             System.out.println(error.getCause());
-
-
 
         });
 

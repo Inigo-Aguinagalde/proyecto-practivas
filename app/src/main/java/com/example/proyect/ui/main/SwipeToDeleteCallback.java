@@ -1,7 +1,13 @@
 package com.example.proyect.ui.main;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.proyect.db.Lista;
+
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     private ListaAdapter mAdapter;
@@ -23,4 +29,6 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
         mAdapter.deleteItem(position);
     }
+
+
 }

@@ -18,11 +18,12 @@ public interface ListaDao {
     @Insert(onConflict =  OnConflictStrategy.IGNORE)
     void insertAll(Lista... messages);
 
-    @Query("SELECT * FROM Lista WHERE nombre =:name")
+    @Query("SELECT * FROM Lista WHERE id =:name")
     Lista selectByName(String name);
 
     @Delete
     void delete(Lista message);
+
 
     @Query("select * from Lista")
     List<Lista>getitemsLista();

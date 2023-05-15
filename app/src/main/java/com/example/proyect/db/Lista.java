@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.UUID;
+
 @Entity
 public class Lista {
 
@@ -14,24 +16,35 @@ public class Lista {
      *
      */
 
-    @PrimaryKey
+    @PrimaryKey()
     @NonNull
+    @ColumnInfo(name = "id")
     public String id;
 
+    public Lista() {
+        // Generate UUID for the id field
+        this.id = UUID.randomUUID().toString();
+    }
+
     @ColumnInfo(name = "nombre")
+    @NonNull
     public String nombre;
 
 
     @ColumnInfo(name = "seccion")
+    @NonNull
     public String seccion;
 
     @ColumnInfo(name = "cantidad")
-    public int cantidad;
+    @NonNull
+    public float cantidad;
 
     @ColumnInfo(name = "notas")
+    @NonNull
     public String notas;
 
     @ColumnInfo(name = "unidad")
+    @NonNull
     public String unidad;
     @NonNull
     public String getId() {
@@ -66,11 +79,11 @@ public class Lista {
         this.notas = notas;
     }
 
-    public int getCantidad() {
+    public float getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(float cantidad) {
         this.cantidad = cantidad;
     }
 

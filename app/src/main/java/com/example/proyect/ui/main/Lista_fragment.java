@@ -40,7 +40,7 @@ public class Lista_fragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAdapter = new ListaAdapter(db);
+        mAdapter = new ListaAdapter(db,main);
     }
 
 
