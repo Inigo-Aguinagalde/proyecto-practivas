@@ -1,0 +1,8 @@
+<!-- edit_text_red_border.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF" /> <!-- set the fill color of the border -->
+    <corners android:radius="4dp" /> <!-- set the radius of the corners -->
+    <stroke
+        android:color="#FF0000"
+    android:width="2dp" /> <!-- set the width of the border -->
+</shape>
