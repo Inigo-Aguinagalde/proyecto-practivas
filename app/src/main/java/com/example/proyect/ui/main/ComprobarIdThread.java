@@ -94,9 +94,6 @@ public class ComprobarIdThread  extends Activity implements Runnable  {
         }, error -> {
             // TODO: Handle error
 
-            System.out.println(error.networkResponse);
-            System.out.println(error.getCause());
-
         });
 
         queue.add(stringRequest);

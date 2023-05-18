@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
             handler.post(() -> {
 
                 if (response!= null) {
-
                     if(response.length()!=0) {
                         JSONArray responseArray = response;
 
@@ -138,8 +137,7 @@ public class MainActivity extends AppCompatActivity {
         }, error -> {
             // TODO: Handle error
 
-            System.out.println(error.networkResponse);
-            System.out.println(error.getCause());
+
 
         });
 
@@ -149,6 +147,43 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    private void checkMongo(ArrayList<Lista> listaCompra) {
+        List<Lista> lista = new ArrayList<>();
+
+        // Perform your database operations here
+        lista = db.ListaDao().getitemsLista();
+
+
+        boolean sizeZero = false;
+        if(lista.size()==0){
+            sizeZero =true;
+        }
+        for (Lista element : listaCompra) {
+            if(sizeZero){
+                db.ListaDao().insertAll(element);
+            }else{
+                boolean esta = false;
+                String roomIDMongo = element.getRoomID();
+                for (int i = 0; i < lista.size(); i++) {
+                    Lista item = lista.get(i);
+                    String roomIDLocal = item.getRoomID();
+                    if(roomIDMongo.equals(roomIDLocal)) {
+                        esta = true;
+                        break;
+                    }
+
+                }
+                if(!esta){
+                    lista.add(element);
+                    db.ListaDao().insertAll(element);
+                }
+            }
+
+        }
+
+    }
+
+
     private boolean mBackPressedOnce = false;
 
     @Override
@@ -176,41 +211,6 @@ public class MainActivity extends AppCompatActivity {
                     .setNegativeButton("No", null)
                     .show();
         }
-    }
-
-
-
-    private void checkMongo(ArrayList<Lista> listaCompra) {
-        List<Lista> lista = new ArrayList<>();
-
-        // Perform your database operations here
-        lista = db.ListaDao().getitemsLista();
-
-
-        boolean sizeZero = false;
-        if(lista.size()==0){
-            sizeZero =true;
-        }
-        for (Lista element : listaCompra) {
-            if(sizeZero){
-                lista.add(element);
-            }else{
-                boolean esta = false;
-                for (int i = 0; i < lista.size(); i++) {
-                    Lista item = lista.get(i);
-                    if(element.getId().equalsIgnoreCase(item.getRoomID())) {
-                        esta = true;
-                        break;
-                    }
-
-                }
-                if(!esta){
-                    lista.add(element);
-                }
-            }
-
-        }
-
     }
 
 }

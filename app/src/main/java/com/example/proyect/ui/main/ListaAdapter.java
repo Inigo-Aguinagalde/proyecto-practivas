@@ -97,14 +97,14 @@ public class ListaAdapter extends RecyclerView.Adapter<ListaAdapter.ListaViewHol
                     public void onResponse(String response) {
                         // Handle successful response
                         // Do something with the response from the Replit
-                        System.out.println("estoy dentro del response");
+
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle error response
-                        System.out.println("estoy dentro del error");
+
                         // Display an error message or retry the request
                     }
                 });

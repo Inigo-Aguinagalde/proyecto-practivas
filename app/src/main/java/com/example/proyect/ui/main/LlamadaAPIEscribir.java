@@ -26,6 +26,7 @@ public class LlamadaAPIEscribir extends Activity {
     private AppDataBase db;
     private Context context;
     private volatile boolean isThreadRunning = true;
+    private Thread thread;
 
     public LlamadaAPIEscribir(AppDataBase db, Context context) {
         this.db = db;
@@ -33,7 +34,7 @@ public class LlamadaAPIEscribir extends Activity {
     }
 
     public void escribir() {
-        Thread thread = new Thread(() -> {
+        thread = new Thread(() -> {
             List<Lista> lista = checkMongo();
 
             JSONArray values = new JSONArray();
@@ -67,19 +68,26 @@ public class LlamadaAPIEscribir extends Activity {
             StringRequest request = new StringRequest(Request.Method.POST, "https://lista.inigoaginagalde.repl.co/write_data",
                     response -> {
 
-                        System.out.println(values);
+
                         Toast.makeText(context, "Los datos se han guardado con éxito", Toast.LENGTH_SHORT).show();
-                        System.out.println("estoy dentro del response");
+
                         if (!isThreadRunning) {
                             // Stop the execution if the flag is set to false
                             return;
                         }
+                        killThread();
                     },
                     error -> {
-                        System.out.println(error);
+
                         Toast.makeText(context, "Los datos no se han podido guardar, por favor inténtalo más tarde", Toast.LENGTH_SHORT).show();
-                        System.out.println("estoy dentro del error");
-                    }) {
+
+                        if (!isThreadRunning) {
+                            // Stop the execution if the flag is set to false
+                            return;
+                        }
+                        killThread();
+                    })
+            {
                 @Override
                 public byte[] getBody() throws AuthFailureError {
                     return payload.toString().getBytes();
@@ -156,11 +164,17 @@ public class LlamadaAPIEscribir extends Activity {
                 },
                 error -> {
                     // Handle error response
-                    System.out.println(error.networkResponse);
-                    System.out.println(error.getCause());
+
                 });
 
         queue.add(stringRequest);
         return ids;
+    }
+
+    public void killThread() {
+        if (thread != null && thread.isAlive()) {
+            isThreadRunning = false;
+            thread.interrupt();
+        }
     }
 }
