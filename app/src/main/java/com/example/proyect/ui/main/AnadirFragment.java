@@ -35,6 +35,7 @@ import org.json.JSONArray;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class AnadirFragment extends Fragment {
 
@@ -167,6 +168,9 @@ public class AnadirFragment extends Fragment {
                     item.setCantidad(cantidadInt);
                     item.setUnidad(unidadText);
                     item.setNotas(notaText);
+                    String id = UUID.randomUUID().toString();
+                    item.setId(id);
+                    item.setRoomID(id);
                     db.ListaDao().insertAll(item);
 
                             });

@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                             // Do something with the values (e.g. create a new object and add it to a list)
                             Lista item = new Lista();
                             item.setRoomID(roomID);
+                            item.setId(roomID);
                             item.setSeccion(seccion.toLowerCase());
                             item.setNombre(producto.toLowerCase());
                             item.setNotas(nota);
