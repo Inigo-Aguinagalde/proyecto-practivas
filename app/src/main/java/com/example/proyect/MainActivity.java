@@ -107,8 +107,6 @@ public class MainActivity extends AppCompatActivity {
                                 throw new RuntimeException(e);
                             }
 
-
-
                             DecimalFormat df = new DecimalFormat("#.##");
                             String formattedValue = df.format(cantidad);
                             float result = Float.parseFloat(formattedValue);
@@ -132,8 +130,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-
-
 
         }, error -> {
             // TODO: Handle error

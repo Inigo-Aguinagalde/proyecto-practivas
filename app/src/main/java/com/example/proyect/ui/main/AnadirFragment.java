@@ -181,10 +181,7 @@ public class AnadirFragment extends Fragment {
                     nota.setText("");
 
                     Toast.makeText(getContext(), "Producto añadido", Toast.LENGTH_SHORT).show();
-
-
-
-
+                    
 
                 }
 
